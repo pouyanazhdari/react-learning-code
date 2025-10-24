@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Test - کار می‌کنه!</title>
+    <!-- استایل ساده برای دیدن نتیجه -->
+    <style>
+        .test {
+            color: #fff;
+            font-size: 3em;
+            text-align: center;
+            margin-top: 50px;
+            background-color: rgb(21, 22, 22);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="root"></div>
+
+
+    <script src="assets/react.js"></script>
+    <script src="assets/react-dom.js"></script>
+    <script>
+        const root = ReactDOM.createRoot(document.getElementById("root"))
+        const element = React.createElement('h1',{
+            className:'test'
+        },'اینو ئیگه خوئت نوشتی'
+    )
+    root.render(element)
+    </script>
+
+</body>
+</html>
