@@ -1,17 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { createRoot } from 'react-dom/client';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const root = createRoot(document.getElementById('root'));
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const tick = () => {
+  const elem = (
+    <div>
+      <h1>Timer</h1>
+      <h3>الان ساعت: {new Date().toLocaleTimeString()}</h3>
+    </div>
+  );
+
+  // هر بار که tick اجرا میشه، دوباره رندر کن
+  root.render(elem);
+};
+
+// هر ۱ ثانیه تابع tick اجرا بشه
+setInterval(tick, 1000);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fa">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,31 +16,53 @@
         }
     </style>
 </head>
+
 <body>
-
-
-                   
-
-
-
-
- 
-
-
-
-      
-<!-- git -->
     <div id="root"></div>
+    <!-- <div id="praticeES6"></div>
     <script src="assets/react.js"></script>
-    <script src="assets/react-dom.js"></script>
-    <script>
+    <script src="assets/react-dom.js"></script> -->
+    <!-- <script>
         const root = ReactDOM.createRoot(document.getElementById("root"))
-        const element = React.createElement('h1',{
-            className:'test'
-        },'اینو ئیگه خوئت نوشتی'
-    )
-    root.render(element)
+        const element = React.createElement('h1', {
+            className: 'test'
+        }, 'اینو ئیگه خوئت نوشتی'
+        )
+        root.render(element)
     </script>
-
+    <script>
+        class square {
+            constructor(width, height) {
+                this.width = width
+                this.height = height
+            }
+            showDetail() {
+                console.log(this.width, this.height)
+            }
+        }
+        class squareWithColor extends square {
+            constructor(width, height, color) {
+                super(width, height)
+                this.color = color
+            }
+            showDetail() {
+                super.showDetail()
+                console.log(this.color)
+            }
+            render() {
+                return '<div style="width: ' + this.width + 'px;height: ' + this.height + 'px;background: ' + this.color + ';"></div>'
+            }
+        }
+        var obj = new square(10, 20)
+        var obj2 = new squareWithColor(222, 333, 'red')
+        obj.showDetail()
+        obj2.showDetail()
+        const showRender = () => {
+            document.getElementById("praticeES6").innerHTML = obj2.render()
+        }
+        showRender()
+    </script> -->
+<script type="module" src="assets/main.js"></script>
 </body>
+
 </html>
