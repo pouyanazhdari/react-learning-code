@@ -94,29 +94,6 @@ class Timer extends React.Component {
                     </span>
                     {isRunning && <span className="running-indicator">در حال اجرا</span>}
                 </div>
-
-                <div className="timer-controls">
-                    <button
-                        onClick={this.handleStart}
-                        disabled={isRunning}
-                        className="btn btn-start"
-                    >
-                        شروع
-                    </button>
-                    <button
-                        onClick={this.handleStop}
-                        disabled={!isRunning}
-                        className="btn btn-stop"
-                    >
-                        توقف
-                    </button>
-                    <button
-                        onClick={this.handleReset}
-                        className="btn btn-reset"
-                    >
-                        ریست
-                    </button>
-                </div>
             </div>
         );
     }
