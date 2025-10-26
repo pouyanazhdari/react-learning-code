@@ -1,0 +1,203 @@
+/* ریست اولیه */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Tahoma', 'Segoe UI', sans-serif;
+  direction: rtl;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* کارت شیشه‌ای */
+.timer-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+  margin: 0 auto;
+}
+
+.timer-card:hover {
+  transform: translateY(-5px);
+}
+
+/* عنوان */
+.timer-title {
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: normal;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* زمان */
+.timer-time {
+  font-size: 48px;
+  font-weight: bold;
+  color: #fff;
+  margin: 20px 0;
+  letter-spacing: 3px;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  font-family: 'Courier New', monospace;
+}
+
+/* تاریخ */
+.timer-date {
+  color: #eee;
+  font-size: 18px;
+  margin: 15px 0;
+  opacity: 0.9;
+}
+
+/* فوتر با نقطه زنده */
+.timer-footer {
+  margin-top: 25px;
+  color: #fff;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.timer-pulse {
+  width: 10px;
+  height: 10px;
+  background: #4ade80;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+  box-shadow: 0 0 15px #4ade80;
+}
+/* دکمه کنترل تایمر */
+.timer-toggle-btn {
+  margin-top: 25px;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  transition: all 0.3s ease;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 140px;
+}
+
+.timer-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+  background: linear-gradient(45deg, #ff5252, #e91e63);
+}
+
+.timer-toggle-btn:active {
+  transform: translateY(0);
+}
+
+/* آیکون داخل دکمه (اختیاری) */
+.timer-toggle-btn .icon {
+  font-size: 18px;
+}
+/* ====== دکمه‌های کنترل تایمر ====== */
+.timer-control-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.timer-btn {
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+.timer-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.timer-btn:active {
+  transform: translateY(0);
+}
+
+/* دکمه شروع (سبز) */
+.timer-btn-start {
+  background: linear-gradient(45deg, #51cf66, #40c057);
+}
+
+.timer-btn-start:hover {
+  background: linear-gradient(45deg, #40c057, #37b24d);
+}
+
+/* دکمه توقف (قرمز) */
+.timer-btn-stop {
+  background: linear-gradient(45deg, #ff6b6b, #f06595);
+}
+
+.timer-btn-stop:hover {
+  background: linear-gradient(45deg, #f06595, #ee5a52);
+}
+
+/* دکمه ریست (زرد/نارنجی) */
+.timer-btn-reset {
+  background: linear-gradient(45deg, #ffd43b, #ffa94d);
+}
+
+.timer-btn-reset:hover {
+  background: linear-gradient(45deg, #ffa94d, #ff922b);
+}
+
+/* آیکون‌ها */
+.timer-btn .icon {
+  font-size: 18px;
+}
+/* انیمیشن چشمک زدن */
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.7; }
+}
+
+/* ریسپانسیو */
+@media (max-width: 480px) {
+  .timer-time {
+    font-size: 36px;
+  }
+  .timer-card {
+    padding: 30px 20px;
+  }
+}
