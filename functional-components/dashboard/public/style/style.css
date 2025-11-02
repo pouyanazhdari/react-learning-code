@@ -1,0 +1,256 @@
+.glass-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Arial', sans-serif;
+  background-color: #121212;
+  color: #fff;
+  direction: rtl;
+}
+
+.glass-sidebar {
+  width: 280px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-radius: 0 20px 20px 0;
+  backdrop-filter: blur(12px);
+  background: rgba(30, 30, 30, 0.7);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  transition: width 0.4s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+.glass-sidebar.close {
+  width: 95px;
+  transition: width 0.3s ease;
+}
+
+/* حالت بسته */
+.glass-sidebar.close .glass-logoWrapper,
+.glass-sidebar.close .glass-userDetails,
+.glass-sidebar.close .glass-userEmail {
+  display: none;
+}
+
+/* اختیاری: وسط‌چین کردن آیکن‌ها در حالت بسته */
+.glass-sidebar.close .glass-navItem {
+  justify-content: center;
+  padding: 12px 8px;
+}
+
+.glass-toggleBtn {
+  background: transparent;
+  border: none;
+  color: #00ffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+
+/* Logo */
+.glass-logoWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.glass-logoIcon {
+  font-size: 2rem;
+  animation: spin 6s linear infinite;
+}
+
+.glass-logoText {
+  font-size: 1.8rem;
+  font-weight: bold;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.glass-userInfo {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(40, 40, 40, 0.5);
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  flex-direction: row-reverse;
+  transition: all 0.3s ease;
+}
+
+.glass-userInfo:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.glass-userAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #00b0ff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-userAvatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px #00b0ff;
+}
+
+.glass-userDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-userName {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.glass-userRole {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.glass-userEmail {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+/* Nav */
+.glass-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.glass-navItem {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  background: rgba(50, 50, 50, 0.5);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.glass-navItem:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #00ffea, #00b0ff);
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+}
+.glass-navItem.active {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #00b0ff, #0027c4);
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+}
+.glass-navIcon {
+  font-size: 1.2rem;
+}
+
+.glass-toggleBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  color: #00fff0;
+  font-size: 1.6rem;
+  cursor: pointer;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  margin: 0 0 0 15px
+}
+
+
+
+.glass-toggleBtn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+}
+
+
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* بخش اصلی */
+.glass-main {
+  flex: 1;
+  overflow-y: auto;
+  /* اسکرول فقط در این قسمت */
+  position: relative;
+}
+
+/* هدر */
+.glass-header {
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: #1a1a1a;
+  padding: 20px 30px;
+  border-radius: 0 0 15px 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  margin: 0 7px;
+}
+
+/* عنوان هدر */
+.glass-headerTitle {
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* محتوای زیر هدر */
+.glass-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 30, 30, 0.7);
+  padding: 20px 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  flex-direction: column;
+  z-index: 10;
+  margin: 7px 7px 0 7px;
+}
