@@ -1,85 +1,122 @@
-import React from 'react';
-const Posts = (props) => {
-    const Posts = props.Posts
-    const samplePosts = [
-        { id: '#001', name: 'پوریا احمدی', username: '@pouria', email: 'pouria@example.com', role: 'توسعه‌دهنده فرانت‌اند' },
-        { id: '#002', name: 'مریم حسینی', username: '@maryam', email: 'maryam@example.com', role: 'مدیر محصول' },
-        { id: '#003', name: 'علی رضایی', username: '@ali', email: 'ali@example.com', role: 'تحقیق و توسعه' }
-    ];
-    const rows = Posts && Posts.length ? Posts : samplePosts;
+import React, { useRef, useState, useEffect } from 'react';
+import { deletePostService, getPostsDataService } from "../assets/features/services/PostServices";
+import { Link } from 'react-router-dom';
 
-    const handleView = (u) => {
-        console.log('view', u);
+const Posts = (props) => {
+    const [postsData, setPostsData] = useState([])
+    const [tempPosts, setTempPosts] = useState([])
+    const searchingTimeoutRef = useRef(null)
+    useEffect(() => {
+        getPostsDataService()
+            .then(data => {
+                setPostsData(data)
+                setTempPosts(data)
+            })
+    }, []);
+    const handleView = (p) => {
+        console.log('view', p);
     };
-    const handleEdit = (u) => {
-        console.log('edit', u);
+    const handleDelete = (p) => {
+        if (!window.confirm(`آیا از حذف "${p.id}" مطمئنی؟`)) return;
+
+        deletePostService(p.id).then((success) => {
+            if (success) {
+                setPostsData((prev) => {
+                    const newUsers = prev.filter((post) => post.id !== p.id);
+                    setTempPosts(newUsers); // بلافاصله tempUsers رو با newUsers آپدیت می‌کنیم
+                    return newUsers;
+                });
+            }
+        });
     };
-    const handleDelete = (u) => {
-        console.log('delete', u);
-    };
+const handleSearch = (e) => {
+  clearTimeout(searchingTimeoutRef.current);
+  const value = e.target.value.toLowerCase();
+
+  searchingTimeoutRef.current = setTimeout(() => {
+    if (value.trim() === "") {
+      // اگر کاربر چیزی وارد نکرده، همه پست‌ها رو نشون بده
+      setTempPosts(postsData);
+    } else {
+      setTempPosts(
+        postsData.filter((p) =>
+          p.title.toLowerCase().includes(value)
+        )
+      );
+    }
+  }, 500);
+};
+
     return (
         <div dir="rtl" className="container py-3">
             <div className="card shadow-sm rounded-3">
                 <div className="card-body">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h5 className="mb-0">لیست پست ها</h5>
-                        <button className="btn btn-sm btn-primary">
-                            <i className="bi bi-plus-lg me-1" /> کاربر جدید
-                        </button>
+                       <Link to="/Posts/add" className="btn btn-sm btn-primary">
+                            <i className="bi bi-plus-lg me-1" /> پست جدید
+                        </Link>
                     </div>
-
+                    <div className="mb-3">
+                        <div className="input-group">
+                            <span className="input-group-text bg-white" style={{ borderRadius: "0 0.375rem 0.375rem 0" }}>
+                                <i className="fa fa-search text-muted"></i>
+                            </span>
+                            <input
+                                type="text"
+                                className="form-control border-end-0 ps-0"
+                                placeholder="جستجو در عنوان ..."
+                                onChange={handleSearch}
+                                style={{ borderRadius: "0.375rem 0 0 0.375rem" }}
+                            />
+                        </div>
+                    </div>
                     <div className="table-responsive">
                         <table className="table align-middle table-hover mb-0">
                             <thead className="table-light">
                                 <tr>
-                                    <th scope="col" className="text-muted">نتم</th>
-                                    <th scope="col">نام</th>
-                                    <th scope="col">نام کاربری</th>
-                                    <th scope="col">ایمیل</th>
+                                    <th scope="col" className="text-muted">شناسه کاربری</th>
+                                    <th scope="col">عنوان پست </th>
+                                    <th scope="col">شناسه پست</th>
+                                    <th scope="col">متن پست</th>
                                     <th scope="col" className="text-center">عملیات</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {rows.map((u) => (
-                                    <tr key={u.id}>
-                                        <td className="text-muted">{u.id}</td>
+                                {tempPosts.map((p) => (
+                                    <tr key={p.id}>
+                                        <td className="text-muted">{p.userId}</td>
                                         <td>
                                             <div className="d-flex align-items-center">
-                                                <div
-                                                    className="rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold"
-                                                    style={{ width: 36, height: 36, background: '#6c5ce7' }}
-                                                >
-                                                    {u.name ? u.name[0] : '?'}
-                                                </div>
                                                 <div className="me-2">
-                                                    <div className="fw-semibold">{u.name}</div>
-                                                    <div className="text-muted small">{u.role}</div>
+                                                    <div className="fw-semibold">{p.title}</div>
+                                                    <div className="text-muted small">{p.title}</div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{u.username}</td>
-                                        <td>{u.email}</td>
+                                        <td>{p.id}</td>
+                                        <td>{p.body}</td>
                                         <td className="text-center">
                                             <div className="d-inline-flex">
                                                 <button
-                                                    className="btn btn-sm btn-outline-primary me-1"
+                                                    className="btn btn-sm btn-outline-primary "
                                                     title="نمایش"
-                                                    onClick={() => handleView(u)}
+                                                    onClick={() => handleView(p)}
                                                 >
-                                                    <i className="fa fa-eye"></i>
+                                                    <i class="fa-solid fa-comment"></i>
                                                 </button>
-                                                <button
-                                                
-                                                    className="btn btn-sm btn-outline-success me-1"
+                                                <Link
+                                                    to={`/Posts/add/${p.id}`}
+                                                    state={{ id: p.id, ops: "Edit" }}
+                                                    className="btn btn-sm btn-outline-success mx-1"
                                                     title="ویرایش"
-                                                    onClick={() => handleEdit(u)}
                                                 >
                                                     <i className="fa fa-pencil-alt"></i>
-                                                </button>
+                                                </Link>
                                                 <button
                                                     className="btn btn-sm btn-outline-danger"
                                                     title="حذف"
-                                                    onClick={() => handleDelete(u)}
+                                                    onClick={() => handleDelete(p)}
                                                 >
                                                     <i className="fa fa-trash"></i>
                                                 </button>
@@ -92,7 +129,7 @@ const Posts = (props) => {
                     </div>
 
                     <div className="d-flex justify-content-between align-items-center mt-3">
-                        <div className="text-muted small">نمایش 1 تا {rows.length} از {rows.length} کاربر</div>
+                        <div className="text-muted small">نمایش 1 تا {tempPosts.length} از {tempPosts.length} پست</div>
                         <nav aria-label="صفحه‌بندی">
                             <ul className="pagination pagination-sm mb-0">
                                 <li className="page-item disabled"><a className="page-link" href="#" tabIndex={-1}>قبلی</a></li>

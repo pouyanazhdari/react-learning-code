@@ -14,16 +14,23 @@ const Users = () => {
 
     }, []);
 
-    const handleSearch = (e) => {
-        clearTimeout(searchingTimeoutRef.current);
-        searchingTimeoutRef.current = setTimeout(() => {
+const handleSearch = (e) => {
+    clearTimeout(searchingTimeoutRef.current);
+    const value = e.target.value.toLowerCase();
+
+    searchingTimeoutRef.current = setTimeout(() => {
+        if (value.trim() === "") {
+            setTempUsers(users);
+        } else {
             setTempUsers(
                 users.filter((u) =>
-                    u.username.toLowerCase().includes(e.target.value.toLowerCase())
+                    u.username.toLowerCase().includes(value)
                 )
             );
-        }, 500);
-    };
+        }
+    }, 500);
+};
+
 
     const handleView = (u) => {
         console.log('view', u);
