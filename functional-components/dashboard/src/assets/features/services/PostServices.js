@@ -20,7 +20,7 @@ export const deletePostService = async (postId) => {
       return true; // ✅ حذف موفق
     }
   } catch (error) {
-    console.error("خطا در حذف کاربر:", error);
+    console.error("خطا در حذف پست:", error);
   }
   return false; // ❌ حذف ناموفق
 };
@@ -33,7 +33,7 @@ export const addPostService = async (id, postData) => {
   try {
     const res = await jpAxios[method](url, postData);
     if (res.status === 200 || res.status === 201) {
-      alert(isEdit ? "کاربر با موفقیت ویرایش شد" : "کاربر با موفقیت اضافه شد");
+      alert(isEdit ? "پست با موفقیت ویرایش شد" : "پست با موفقیت اضافه شد");
       return true;
     }
   } catch (err) {
