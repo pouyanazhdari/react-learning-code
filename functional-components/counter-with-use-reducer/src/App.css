@@ -1,0 +1,35 @@
+.counter-container {
+  text-align: center;
+  margin-top: 100px;
+  font-family: Arial, sans-serif;
+}
+
+.count {
+  font-size: 48px;
+  margin: 20px 0;
+  color: #2c3e50;
+}
+
+.buttons button {
+  margin: 0 10px;
+  padding: 12px 24px;
+  font-size: 18px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.buttons button:hover {
+  background: #2980b9;
+}
+
+.buttons button:nth-child(3) {
+  background: #e74c3c;
+}
+
+.buttons button:nth-child(3):hover {
+  background: #c0392b;
+}
