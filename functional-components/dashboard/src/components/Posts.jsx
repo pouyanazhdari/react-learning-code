@@ -2,12 +2,13 @@ import React, { useRef, useState, useEffect } from 'react';
 import { deletePostService, getPostsDataService } from "../assets/features/services/PostServices";
 import { getUsersDataService } from "../assets/features/services/UserServices";
 import { Link } from 'react-router-dom';
-
+import useTitle from '../assets/features/HOC/useTitle';
 const Posts = (props) => {
     const [postsData, setPostsData] = useState([])
     const [tempPosts, setTempPosts] = useState([])
     const searchingTimeoutRef = useRef(null)
-    const [users, setUsers] = useState();
+    const [users, setUsers] = useState([]);
+    useTitle('Posts')
     useEffect(() => {
         getPostsDataService()
             .then(data => {

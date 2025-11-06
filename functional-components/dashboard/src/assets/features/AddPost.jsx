@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useReducer } from "react";
+import React, { useRef, useState, useEffect, useReducer, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { loadPostDataService, addPostService } from "../features/services/PostServices";
 import { getUsersDataService } from "../features/services/UserServices";
@@ -23,23 +23,24 @@ const postReducer = (state, action) => {
 const AddPost = () => {
     const { postId } = useParams();
     const navigate = useNavigate();
-    const params = useLocation();
-    const editPostId = params?.state?.id || postId;
+    const location = useLocation();
+    const editPostId = location?.state?.id || postId;
 
     const [postData, dispatch] = useReducer(postReducer, initialState);
     const [tempData, setTempData] = useState(initialState);
     const [users, setUsers] = useState([]);
     const typingTimeoutRef = useRef(null);
 
+    // درست: useCallback با dependency خالی
+    const handleChange = useCallback((field, value) => {
+        setTempData((prev) => ({ ...prev, [field]: value }));
+    }, []);
+
     const handleAddPost = async (e) => {
         e.preventDefault();
         await addPostService(editPostId, tempData);
         resetForm();
     };
-
-  const handleChange = useCallback((field, value) => {
-    setTempData((prev) => ({ ...prev, [field]: value }));
-  }, [field, value]);
 
     const resetForm = () => {
         dispatch({ type: "RESET" });
@@ -58,7 +59,6 @@ const AddPost = () => {
             if (isMounted && resultData) {
                 const newPost = {
                     userId: resultData.userId,
-                    id: resultData.id,
                     title: resultData.title,
                     body: resultData.body,
                 };
@@ -83,20 +83,20 @@ const AddPost = () => {
 
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-100">
-            <div className="card shadow p-4 rounded-4 w-100">
+            <div className="card shadow p-4 rounded-4 w-100" style={{ maxWidth: "600px" }}>
                 <h3 className="text-center mb-4">
-                    {postId ? "ویرایش پست" : "ثبت پست جدید"}
+                    {editPostId ? "ویرایش پست" : "ثبت پست جدید"}
                 </h3>
 
                 <form onSubmit={handleAddPost}>
                     {/* کاربر */}
-                    <div className="mb-3 w-100">
-                        <label htmlFor="userSelect" className="form-label">کاربر</label>
+                    <div className="mb-3">
+                        <label className="form-label">کاربر</label>
                         <select
-                            id="userSelect"
-                            className="form-control w-100"
+                            className="form-select"
                             value={tempData.userId}
                             onChange={(e) => handleChange("userId", e.target.value)}
+                            required
                         >
                             <option value="">کاربر مورد نظر را انتخاب کنید</option>
                             {users.map((u) => (
@@ -107,56 +107,51 @@ const AddPost = () => {
                         </select>
                     </div>
 
-                    {/* شناسه کاربری */}
-                    <div className="mb-3 w-100">
-                        <label htmlFor="userId" className="form-label">شناسه کاربری</label>
+                    {/* شناسه */}
+                    <div className="mb-3">
+                        <label className="form-label">شناسه کاربری</label>
                         <input
-                            readOnly
-                            value={tempData.userId}
                             type="text"
-                            id="userId"
-                            className="form-control w-100"
-                            required
+                            className="form-control"
+                            value={tempData.userId}
+                            readOnly
                         />
                     </div>
 
-                    {/* عنوان پست */}
-                    <div className="mb-3 w-100">
-                        <label htmlFor="title" className="form-label">عنوان پست</label>
+                    {/* عنوان */}
+                    <div className="mb-3">
+                        <label className="form-label">عنوان پست</label>
                         <input
-                            value={tempData.title}
                             type="text"
-                            id="title"
-                            className="form-control w-100"
+                            className="form-control"
+                            value={tempData.title}
+                            onChange={(e) => handleChange("title", e.target.value)}
                             placeholder="عنوان پست را وارد کنید"
                             required
-                            onChange={(e) => handleChange("title", e.target.value)}
                         />
                     </div>
 
-                    {/* متن پست */}
-                    <div className="mb-3 w-100">
-                        <label htmlFor="body" className="form-label">متن پست</label>
+                    {/* متن */}
+                    <div className="mb-3">
+                        <label className="form-label">متن پست</label>
                         <textarea
-                            value={tempData.body}
-                            id="body"
-                            className="form-control w-100"
-                            placeholder="متن پست خود را وارد کنید"
+                            className="form-control"
                             rows={5}
-                            required
+                            value={tempData.body}
                             onChange={(e) => handleChange("body", e.target.value)}
+                            placeholder="متن پست خود را وارد کنید"
+                            required
                         />
                     </div>
 
-                    {/* دکمه‌ها */}
                     <div className="d-flex gap-2">
-                        <button type="submit" className="btn btn-primary w-100">
-                            {postId ? "ویرایش" : "ثبت"}
+                        <button type="submit" className="btn btn-primary flex-fill">
+                            {editPostId ? "ویرایش" : "ثبت"}
                         </button>
                         <button
                             type="button"
                             onClick={() => navigate(-1)}
-                            className="btn btn-danger w-100"
+                            className="btn btn-secondary flex-fill"
                         >
                             بازگشت
                         </button>

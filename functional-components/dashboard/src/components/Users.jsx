@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { deleteUserService, getUsersDataService } from "../assets/features/services/UserServices";
+import useTitle from '../assets/features/HOC/useTitle';
 const Users = () => {
     const [users, setUsers] = useState([]);
     const [tempUsers, setTempUsers] = useState([]);
     const searchingTimeoutRef = useRef(null);
-
+    useTitle('users')
     useEffect(() => {
         getUsersDataService().then((data) => {
             setUsers(data);
