@@ -1,17 +1,22 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { deletePostService, getPostsDataService } from "../assets/features/services/PostServices";
+import { getUsersDataService } from "../assets/features/services/UserServices";
 import { Link } from 'react-router-dom';
 
 const Posts = (props) => {
     const [postsData, setPostsData] = useState([])
     const [tempPosts, setTempPosts] = useState([])
     const searchingTimeoutRef = useRef(null)
+    const [users, setUsers] = useState();
     useEffect(() => {
         getPostsDataService()
             .then(data => {
                 setPostsData(data)
                 setTempPosts(data)
             })
+        getUsersDataService().then((data) => {
+            setUsers(data);
+        });
     }, []);
     const handleView = (p) => {
         console.log('view', p);
@@ -29,31 +34,33 @@ const Posts = (props) => {
             }
         });
     };
-const handleSearch = (e) => {
-  clearTimeout(searchingTimeoutRef.current);
-  const value = e.target.value.toLowerCase();
+    const handleSearch = (e) => {
+        clearTimeout(searchingTimeoutRef.current);
+        const value = e.target.value.toLowerCase();
 
-  searchingTimeoutRef.current = setTimeout(() => {
-    if (value.trim() === "") {
-      // اگر کاربر چیزی وارد نکرده، همه پست‌ها رو نشون بده
-      setTempPosts(postsData);
-    } else {
-      setTempPosts(
-        postsData.filter((p) =>
-          p.title.toLowerCase().includes(value)
-        )
-      );
+        searchingTimeoutRef.current = setTimeout(() => {
+            if (value.trim() === "") {
+                // اگر کاربر چیزی وارد نکرده، همه پست‌ها رو نشون بده
+                setTempPosts(postsData);
+            } else {
+                setTempPosts(
+                    postsData.filter((p) =>
+                        p.title.toLowerCase().includes(value)
+                    )
+                );
+            }
+        }, 500);
+    };
+    const getUserById = (userId) => {
+        return users.find(u => u.id === userId)
     }
-  }, 500);
-};
-
     return (
         <div dir="rtl" className="container py-3">
             <div className="card shadow-sm rounded-3">
                 <div className="card-body">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h5 className="mb-0">لیست پست ها</h5>
-                       <Link to="/Posts/add" className="btn btn-sm btn-primary">
+                        <Link to="/Posts/add" className="btn btn-sm btn-primary">
                             <i className="bi bi-plus-lg me-1" /> پست جدید
                         </Link>
                     </div>
@@ -85,12 +92,12 @@ const handleSearch = (e) => {
                             <tbody>
                                 {tempPosts.map((p) => (
                                     <tr key={p.id}>
-                                        <td className="text-muted">{p.userId}</td>
+                                        <td className="text-muted">{getUserById(p.userId)?.name}</td>
                                         <td>
                                             <div className="d-flex align-items-center">
                                                 <div className="me-2">
                                                     <div className="fw-semibold">{p.title}</div>
-                                                    <div className="text-muted small">{p.title}</div>
+                                                    <div className="text-muted small">{getUserById(p.userId)?.username}</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -103,7 +110,7 @@ const handleSearch = (e) => {
                                                     title="نمایش"
                                                     onClick={() => handleView(p)}
                                                 >
-                                                    <i class="fa-solid fa-comment"></i>
+                                                    <i className="fa-solid fa-comment"></i>
                                                 </button>
                                                 <Link
                                                     to={`/Posts/add/${p.id}`}

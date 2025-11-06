@@ -48,6 +48,7 @@ export const loadPostDataService = async (id) => {
   try {
     const res = await jpAxios.get(`/posts/${id}`);
     if (res.status === 200) {
+      console.log(res.data)
       return res.data;
     }
   } catch (error) {

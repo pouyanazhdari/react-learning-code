@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useParams , useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { loadPostDataService, addPostService } from "../features/services/PostServices";
+import { getUsersDataService } from "../features/services/UserServices";
+
 const AddPost = () => {
     const initialState = {
         userId: "",
@@ -14,21 +16,22 @@ const AddPost = () => {
 
     const [postData, setPostData] = useState(initialState);
     const [tempData, setTempData] = useState(initialState);
+    const [users, setUsers] = useState([]);
     const typingTimeoutRef = useRef(null);
-    // 🔹 اضافه یا ویرایش کاربر
     const handleAddPost = async (e) => {
         e.preventDefault();
         await addPostService(editPostId, tempData);
         resetForm();
     };
-
-    // 🔹 ریست فرم
     const resetForm = () => {
         setTempData(initialState);
         setPostData(initialState);
     };
-
-    // 🔹 بارگذاری داده کاربر برای ویرایش
+    useEffect(() => {
+        getUsersDataService().then((data) => {
+            setUsers(data);
+        });
+    }, [])
     useEffect(() => {
         if (!editPostId) return;
         let isMounted = true;
@@ -49,8 +52,6 @@ const AddPost = () => {
             isMounted = false;
         };
     }, [editPostId]);
-
-    // 🔹 آپدیت داده‌ها با تاخیر 500ms هنگام تایپ
     useEffect(() => {
         clearTimeout(typingTimeoutRef.current);
         typingTimeoutRef.current = setTimeout(() => {
@@ -68,16 +69,30 @@ const AddPost = () => {
 
                 <form onSubmit={handleAddPost}>
                     {/* شناسه کاربری */}
+
+                    <div className="mb-3 w-100">
+                        <label htmlFor="fullName" className="form-label"> کاربر </label>
+                        <select className="form-control w-100" value={tempData.userId} onChange={(e) => {
+                            setTempData(
+
+                                { ...tempData, userId: e.target.value }
+                            );
+                        }}>
+                            <option value="کاربر مورد نظر را پیدا کنید">کاربر مورد نظر را پیدا کنید</option>
+                            {users.map((u) => {
+                                return <option key={u.id} value={u.id}>{u.username}</option>
+                            })}
+                        </select>
+                    </div>
                     <div className="mb-3 w-100">
                         <label htmlFor="fullName" className="form-label">شناسه کاربری</label>
                         <input
+                            readOnly
                             value={tempData.userId}
                             type="text"
                             id="fullName"
                             className="form-control w-100"
-                            placeholder="شادی اژدری"
                             required
-                            onChange={(e) => setTempData({ ...tempData, userId: e.target.value })}
                         />
                     </div>
 
