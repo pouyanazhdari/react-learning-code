@@ -1,37 +1,55 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useReducer } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { loadPostDataService, addPostService } from "../features/services/PostServices";
 import { getUsersDataService } from "../features/services/UserServices";
 
+const initialState = {
+    userId: "",
+    title: "",
+    body: "",
+};
+
+const postReducer = (state, action) => {
+    switch (action.type) {
+        case "SET_POST":
+            return { ...action.payload };
+        case "RESET":
+            return initialState;
+        default:
+            return state;
+    }
+};
+
 const AddPost = () => {
-    const initialState = {
-        userId: "",
-        title: "",
-        body: "",
-    };
     const { postId } = useParams();
     const navigate = useNavigate();
     const params = useLocation();
     const editPostId = params?.state?.id || postId;
 
-    const [postData, setPostData] = useState(initialState);
+    const [postData, dispatch] = useReducer(postReducer, initialState);
     const [tempData, setTempData] = useState(initialState);
     const [users, setUsers] = useState([]);
     const typingTimeoutRef = useRef(null);
+
     const handleAddPost = async (e) => {
         e.preventDefault();
         await addPostService(editPostId, tempData);
         resetForm();
     };
+
+  const handleChange = useCallback((field, value) => {
+    setTempData((prev) => ({ ...prev, [field]: value }));
+  }, [field, value]);
+
     const resetForm = () => {
+        dispatch({ type: "RESET" });
         setTempData(initialState);
-        setPostData(initialState);
     };
+
     useEffect(() => {
-        getUsersDataService().then((data) => {
-            setUsers(data);
-        });
-    }, [])
+        getUsersDataService().then((data) => setUsers(data));
+    }, []);
+
     useEffect(() => {
         if (!editPostId) return;
         let isMounted = true;
@@ -40,10 +58,11 @@ const AddPost = () => {
             if (isMounted && resultData) {
                 const newPost = {
                     userId: resultData.userId,
+                    id: resultData.id,
                     title: resultData.title,
                     body: resultData.body,
                 };
-                setPostData(newPost);
+                dispatch({ type: "SET_POST", payload: newPost });
                 setTempData(newPost);
             }
         });
@@ -52,14 +71,16 @@ const AddPost = () => {
             isMounted = false;
         };
     }, [editPostId]);
+
     useEffect(() => {
         clearTimeout(typingTimeoutRef.current);
         typingTimeoutRef.current = setTimeout(() => {
-            setPostData(tempData);
+            dispatch({ type: "SET_POST", payload: tempData });
         }, 500);
 
         return () => clearTimeout(typingTimeoutRef.current);
     }, [tempData]);
+
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-100">
             <div className="card shadow p-4 rounded-4 w-100">
@@ -68,29 +89,32 @@ const AddPost = () => {
                 </h3>
 
                 <form onSubmit={handleAddPost}>
-                    {/* شناسه کاربری */}
-
+                    {/* کاربر */}
                     <div className="mb-3 w-100">
-                        <label htmlFor="fullName" className="form-label"> کاربر </label>
-                        <select className="form-control w-100" value={tempData.userId} onChange={(e) => {
-                            setTempData(
-
-                                { ...tempData, userId: e.target.value }
-                            );
-                        }}>
-                            <option value="کاربر مورد نظر را پیدا کنید">کاربر مورد نظر را پیدا کنید</option>
-                            {users.map((u) => {
-                                return <option key={u.id} value={u.id}>{u.username}</option>
-                            })}
+                        <label htmlFor="userSelect" className="form-label">کاربر</label>
+                        <select
+                            id="userSelect"
+                            className="form-control w-100"
+                            value={tempData.userId}
+                            onChange={(e) => handleChange("userId", e.target.value)}
+                        >
+                            <option value="">کاربر مورد نظر را انتخاب کنید</option>
+                            {users.map((u) => (
+                                <option key={u.id} value={u.id}>
+                                    {u.username}
+                                </option>
+                            ))}
                         </select>
                     </div>
+
+                    {/* شناسه کاربری */}
                     <div className="mb-3 w-100">
-                        <label htmlFor="fullName" className="form-label">شناسه کاربری</label>
+                        <label htmlFor="userId" className="form-label">شناسه کاربری</label>
                         <input
                             readOnly
                             value={tempData.userId}
                             type="text"
-                            id="fullName"
+                            id="userId"
                             className="form-control w-100"
                             required
                         />
@@ -98,30 +122,29 @@ const AddPost = () => {
 
                     {/* عنوان پست */}
                     <div className="mb-3 w-100">
-                        <label htmlFor="username" className="form-label">عنوان پست</label>
+                        <label htmlFor="title" className="form-label">عنوان پست</label>
                         <input
                             value={tempData.title}
                             type="text"
-                            id="username"
+                            id="title"
                             className="form-control w-100"
-                            placeholder="shadi_ajdari"
+                            placeholder="عنوان پست را وارد کنید"
                             required
-                            onChange={(e) => setTempData({ ...tempData, title: e.target.value })}
+                            onChange={(e) => handleChange("title", e.target.value)}
                         />
                     </div>
 
                     {/* متن پست */}
                     <div className="mb-3 w-100">
-                        <label htmlFor="postBody" className="form-label">متن پست</label>
+                        <label htmlFor="body" className="form-label">متن پست</label>
                         <textarea
                             value={tempData.body}
-                            id="postBody"
+                            id="body"
                             className="form-control w-100"
                             placeholder="متن پست خود را وارد کنید"
                             rows={5}
                             required
-                            onChange={(e) => setTempData({ ...tempData, body: e.target.value })}
-
+                            onChange={(e) => handleChange("body", e.target.value)}
                         />
                     </div>
 
