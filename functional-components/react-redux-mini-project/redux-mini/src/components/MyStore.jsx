@@ -1,32 +1,24 @@
 import React from "react";
-import { connect } from "react-redux"; // این خط اضافه شد
+import { connect, useDispatch, useSelector } from "react-redux"; // این خط اضافه شد
 import { buyApple, buyOrange } from "../redux/fruit/fruitAction";
-
-const MyStore = (props) => {
+import { buySandwich } from "../redux/food/foodAction";
+const MyStore = () => {
+    const fruitState = useSelector((state) => state.fruit);
+    const foodState = useSelector((state) => state.food);
+    console.log(fruitState)
+    const dispatch = useDispatch()
     return (
         <div>
-            <h5>سیب: {props.apple}</h5>
-            <h5>پرتقال: {props.orange}</h5>
+            <h5>سیب: {fruitState.apple}</h5>
+            <h5>پرتقال: {fruitState.orange}</h5>
+            <h5>پرتقال: {foodState.sandwich}</h5>
             <div>
-                <button onClick={props.buyApple}>خرید سیب</button>
-                <button onClick={props.buyOrange}>خرید پرتقال</button>
+                <button onClick={() => dispatch(buyApple())}>خرید سیب</button>
+                <button onClick={() => dispatch(buyOrange())}>خرید پرتقال</button>
+                <button onClick={() => dispatch(buySandwich())}>خرید ساندویچ</button>
             </div>
         </div>
     );
 };
 
-const mapStateToProps = state => {
-    return {
-        apple: state.apple,
-        orange: state.orange
-    };
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-        buyApple: () => dispatch(buyApple()),
-        buyOrange: () => dispatch(buyOrange())
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MyStore);
+export default MyStore;
