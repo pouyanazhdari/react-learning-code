@@ -1,26 +1,37 @@
-import { RECEIVE_COUNTRIES_ERROR,RECEIVE_COUNTRIES_RESPONSE,SEND_COUNTRIES_REQUEST } from "./countriesType"; 
+import { RECEIVE_COUNTRIES_ERROR, RECEIVE_COUNTRIES_RESPONSE, SEND_COUNTRIES_REQUEST, SET_SELECTED_COUNTRY } from "./countriesType";
 const countriesInit = {
     data: [],
-    error: ''
+    error: '',
+    selectedCountry: {}
 }
 
-const countriesReducer = (state = countriesInit,action)=>{
+const countriesReducer = (state = countriesInit, action) => {
     switch (action.type) {
         case SEND_COUNTRIES_REQUEST:
-             return state
+            return state
         case RECEIVE_COUNTRIES_RESPONSE:
-             return {...state,
-                data:action.payload,
-                error:''
-            }    
-            case RECEIVE_COUNTRIES_ERROR:
-             return {...state,
-                data:[],
-                error:action.payload
+            return {
+                ...state,
+                data: action.payload,
+                error: '',
+                selectedCountry: {}
             }
-    
+        case RECEIVE_COUNTRIES_ERROR:
+            return {
+                ...state,
+                data: [],
+                error: action.payload,
+                selectedCountry: {}
+
+            }
+        case SET_SELECTED_COUNTRY:
+            return {
+                ...state,
+                selectedCountry: action.payload
+            }
+
         default:
-             return state
+            return state
     }
 }
 
