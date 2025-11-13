@@ -1,0 +1,142 @@
+/* ====== تنظیمات پایه ====== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'Vazirmatn', sans-serif;
+  direction: rtl;
+}
+
+body {
+  background: url('https://source.unsplash.com/1600x900/?world,map,sky') center/cover no-repeat fixed;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* ====== کارت اصلی ====== */
+.wwc-card {
+  width: min(900px, 95%);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 28px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 28px;
+}
+
+/* ====== بخش چپ ====== */
+.wwc-left {
+  text-align: center;
+}
+
+.wwc-title {
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.wwc-select-box {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.wwc-select {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.wwc-select:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.wwc-select option {
+  background-color: #1b1b1b;
+  color: #fff;
+}
+
+.wwc-btn {
+  background: #00c6ff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #041024;
+  transition: 0.3s;
+  width: 85px;
+  font-size: 13px;
+}
+
+.wwc-btn:hover {
+  background: #32d8ff;
+}
+
+.wwc-info {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #ddd;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ====== بخش راست ====== */
+.wwc-right {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  margin-left: 30px;
+}
+
+.wwc-flag {
+  width: 80px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  background-size: cover;
+  background-position: center;
+  margin: 0 auto 12px;
+}
+
+.wwc-country {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.wwc-date {
+  font-size: 15px;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.wwc-time {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.wwc-temp {
+  font-size: 30px;
+  font-weight: 600;
+  color: #ffd25a;
+}
