@@ -1,0 +1,182 @@
+/* فونت فارسی IranYekan */
+@import url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.css');
+
+/* ریشه */
+:root{
+  --bg: #0f1724;
+  --card:#0b1220;
+  --accent1:#6EE7B7;
+  --accent2:#60A5FA;
+  --muted:#a7b4c4;
+  --danger:#ff6b6b;
+  --glass: rgba(255,255,255,0.05);
+}
+*{
+    margin: 0;
+    padding: 0;
+    
+}
+/* وسط‌چین + rtl */
+.signup-root{
+  direction: rtl;
+  text-align: right;
+  font-family: 'Yekan', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  padding: 40px;
+  background: linear-gradient(180deg, #08101f, #060d1a);
+}
+
+/* کارت اصلی */
+.card{
+  width: 420px;
+  background: var(--glass);
+  border-radius: 18px;
+  padding: 28px;
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* هدر */
+.brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.brand h2{
+  margin: 0;
+  color: #fff;
+  font-size: 22px;
+}
+.logo{
+  width: 40px;
+  height: 40px;
+  fill: var(--accent1);
+}
+
+/* فرم */
+.form{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* فیلدها */
+.field{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field input{
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  padding: 12px 14px;
+  color: #fff;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  direction: rtl;
+  text-align: right;
+}
+.field input::placeholder{
+  color: rgba(255,255,255,0.3);
+}
+
+/* فوکوس فیلد */
+.field input:focus{
+  border-color: var(--accent2);
+  box-shadow: 0 0 10px rgba(96,165,250,0.3);
+}
+
+/* لیبل */
+.label-text{
+  font-size: 13px;
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+/* خطا */
+.error{
+  font-size: 12px;
+  color: var(--danger);
+  margin-top: 4px;
+}
+
+/* دو ستونه */
+.two-cols{
+  display: flex;
+  gap: 10px;
+}
+.two-cols .field{
+  flex: 1;
+}
+
+/* چک‌باکس */
+.checkbox-field{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* دکمه */
+.btn{
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--accent2), var(--accent1));
+  color: #042027;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(96,165,250,0.25);
+  transition: .2s;
+}
+.btn:hover{
+  transform: translateY(-2px);
+}
+
+/* فوتر */
+.footer{
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.footer a{
+  color: var(--accent1);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* بخش تزئینی سمت راست */
+.art{
+  width: 200px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gradient-circle{
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(110,231,183,0.25), rgba(96,165,250,0.18));
+  border-radius: 50%;
+  filter: blur(22px);
+}
+
+/* رسپانسیو */
+@media(max-width: 860px){
+  .signup-root{
+    flex-direction: column;
+    padding: 20px;
+  }
+  .art{ display: none; }
+  .card{ width: 100%; max-width: 450px; }
+}
