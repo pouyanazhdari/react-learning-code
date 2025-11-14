@@ -1,7 +1,7 @@
 import {
     call,
     put,
-    takeEvery
+    takeLatest
 } from "redux-saga/effects";
 import axios from "axios";
 import { SEND_COUNTRIES_REQUEST } from "./countriesType";
@@ -28,5 +28,5 @@ function* handleCountries(action) {
 }
 
 export function* countriesSaga() {
-    yield takeEvery(SEND_COUNTRIES_REQUEST, handleCountries);
+    yield takeLatest(SEND_COUNTRIES_REQUEST, handleCountries);
 }
