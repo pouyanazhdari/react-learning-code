@@ -11,10 +11,8 @@ const FavoritFeilds = ({ push, remove, form }) => {
         <span>علایق من</span>
         <button
           type="button"
-          onClick={() => {
-            push(""); // درست کار می‌کنه، چون FieldArray خودش مدیریت می‌کنه
-          }}
-          className="add-btn"
+          onClick={() => push("")}
+          className="btn add-btn"
         >
           افزودن
         </button>
@@ -22,7 +20,7 @@ const FavoritFeilds = ({ push, remove, form }) => {
 
       {favorits && favorits.length > 0 ? (
         favorits.map((_, index) => (
-          <div key={index} className="favorit-item">
+          <div key={index} className="favorit-item field">
             <Field
               type="text"
               placeholder="مثلاً: فوتبال"
@@ -35,14 +33,14 @@ const FavoritFeilds = ({ push, remove, form }) => {
             <button
               type="button"
               onClick={() => remove(index)}
-              className="remove-btn"
+              className="btn remove-btn"
             >
               حذف
             </button>
           </div>
         ))
       ) : (
-        <p>هیچ علاقه‌ای اضافه نشده.</p>
+        <p className="muted-text">هیچ علاقه‌ای اضافه نشده.</p>
       )}
     </div>
   );

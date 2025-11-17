@@ -1,35 +1,55 @@
-// src/App.jsx
-import React from "react";
+// App.jsx
+import React, { useState, useEffect } from "react";
 import {
   Formik,
   Form,
   Field,
   ErrorMessage,
-  FastField,
   FieldArray,
 } from "formik";
 import * as Yup from "yup";
 import CustomizeError from "./CustomizeError";
 import FavoritFeilds from "./FavoritFeilds";
+import FormikElements from "./formikElements/FormikElememts";
+
+// آرایه education داخل کامپوننت
+const education = [
+  { id: 1, value: "دیپلم" },
+  { id: 2, value: "کارشناسی" },
+  { id: 3, value: "کارشناسی ارشد" },
+  { id: 4, value: "دکتری" },
+  { id: 5, value: "پست دکتری" },
+];
+const skils = [
+  { id: 1, value: "htnl" },
+  { id: 2, value: "css" },
+  { id: 3, value: " js" },
+  { id: 4, value: "react" },
+  { id: 5, value: "mvc .net Core" },
+];
+const gender = [
+  { id: "male", value: "مرد" },
+  { id: "female", value: "زن" },
+];
 
 const initialValues = {
   fullName: "",
   email: "",
   password: "",
+  rePassword: "",
   bio: "",
-  address: {
-    postalCode: "",
-    city: "",
-  },
+  address: { postalCode: "", city: "" },
   phone: ["", ""],
-  favorits: [""],
+  favorits: [],
+  // terms: false,
+  education: "",
+  gender: "",
+  skils: [],
 };
 
 const validationSchema = Yup.object({
   fullName: Yup.string().required("نام و نام خانوادگی اجباری است"),
-  email: Yup.string()
-    .email("ایمیل معتبر نیست")
-    .required("ایمیل اجباری است"),
+  email: Yup.string().email("ایمیل معتبر نیست").required("ایمیل اجباری است"),
   password: Yup.string()
     .min(8, "رمز باید حداقل 8 کاراکتر باشد")
     .required("رمز عبور اجباری است"),
@@ -37,6 +57,7 @@ const validationSchema = Yup.object({
     .oneOf([Yup.ref("password")], "رمز عبور و تکرار آن یکسان نیستند")
     .required("تکرار رمز عبور اجباری است"),
   bio: Yup.string().required("بیوگرافی اجباری است"),
+  education: Yup.string().required("تحصیلات اجباری است"),
   address: Yup.object({
     city: Yup.string().required("شهر اجباری است"),
     postalCode: Yup.string()
@@ -48,30 +69,59 @@ const validationSchema = Yup.object({
     .of(
       Yup.string()
         .transform((value) => value.replace(/[^0-9]/g, ""))
-        .test("len", "شماره باید 11 رقم باشد", (val) => !val || val.length === 11)
+        .test(
+          "len",
+          "شماره باید 11 رقم باشد",
+          (val) => !val || val.length === 11
+        )
         .nullable()
     )
     .min(1, "حداقل یک شماره موبایل وارد کنید"),
   favorits: Yup.array()
     .of(Yup.string().required("علاقه نمی‌تواند خالی باشد"))
     .min(1, "حداقل یک علاقه وارد کنید"),
+  // terms: Yup.boolean().oneOf([true], "باید شرایط را بپذیرید"),
 });
 
-const onSubmit = (values, { setSubmitting }) => {
+const onSubmit = (values, { setSubmitting, resetForm }) => {
+  // const { rePassword, terms, ...cleanData } = values;
   const { rePassword, ...cleanData } = values;
   console.log("داده‌های تمیز:", cleanData);
+
   setTimeout(() => {
+    localStorage.setItem("saveData", JSON.stringify(cleanData));
     setSubmitting(false);
-  }, 1000); // شبیه‌سازی ارسال
+    resetForm();
+  }, 1000);
 };
 
-function App() {
+export default function App() {
+  const [savedData, setSavedData] = useState(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("saveData");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setSavedData({
+          ...initialValues,
+          ...parsed,
+          rePassword: "",
+          // terms: false,
+        });
+        // ⬇ بعد از load، اعتبارسنجی اجرا نمی‌شود
+      } catch (e) {
+        console.error("خطا در خواندن localStorage:", e);
+      }
+    }
+  }, []);
+
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={savedData || initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
-      validateOnMount={true}
+      enableReinitialize
     >
       {(formik) => (
         <div className="signup-root">
@@ -85,149 +135,185 @@ function App() {
 
             <Form className="form">
               {/* نام و نام خانوادگی */}
-              <label className="field">
-                <span className="label-text">نام و نام خانوادگی</span>
-                <FastField type="text" placeholder="مثلاً: پویان اژدری" name="fullName" />
-                <ErrorMessage name="fullName" component={CustomizeError} />
-              </label>
+              <FormikElements
+                control="input"
+                label="نام و نام خانوادگی"
+                type="text"
+                name="fullName"
+                placeholder="مثلاً: پویان اژدری"
+              />
 
               {/* ایمیل */}
-              <label className="field">
-                <span className="label-text">ایمیل</span>
-                <FastField type="email" placeholder="example@mail.com" name="email" />
-                <ErrorMessage name="email" component="small" />
-              </label>
+              <FormikElements
+                control="input"
+                label="ایمیل"
+                type="email"
+                name="email"
+              />
 
               {/* رمز و تکرار */}
               <div className="two-cols">
-                <label className="field">
-                  <span className="label-text">رمز عبور</span>
-                  <FastField type="password" name="password" placeholder="حداقل ۸ کاراکتر" />
-                  <ErrorMessage name="password" component={CustomizeError} />
-                </label>
-
-                <label className="field">
-                  <span className="label-text">تکرار رمز</span>
-                  <FastField type="password" name="rePassword" placeholder="تکرار رمز" />
-                  <ErrorMessage name="rePassword" component={CustomizeError} />
-                </label>
+                <FormikElements
+                  control="input"
+                  label="رمز عبور"
+                  type="password"
+                  name="password"
+                />
+                <FormikElements
+                  control="input"
+                  label="تکرار رمز عبور"
+                  type="password"
+                  name="rePassword"
+                />
               </div>
 
               {/* شهر و کد پستی */}
               <div className="two-cols">
-                <label className="field">
-                  <span className="label-text">شهر</span>
-                  <FastField type="text" name="address.city" placeholder="تهران" />
-                  <ErrorMessage name="address.city" component={CustomizeError} />
-                </label>
-
-                <label className="field">
-                  <span className="label-text">کد پستی</span>
-                  <Field name="address.postalCode">
-                    {({ field, form }) => {
-                      const handleChange = (e) => {
-                        const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 10);
-                        form.setFieldValue("address.postalCode", value);
-                      };
-
-                      return (
-                        <input
-                          {...field}
-                          type="text"
-                          inputMode="numeric"
-                          placeholder="1234567890"
-                          value={field.value || ""}
-                          onChange={handleChange}
-                          maxLength={10}
-                        />
-                      );
-                    }}
-                  </Field>
-                  <ErrorMessage name="address.postalCode" component={CustomizeError} />
-                </label>
+                <FormikElements
+                  control="input"
+                  label="شهر"
+                  type="text"
+                  name="address.city"
+                  placeholder="تهران"
+                />
+                <FormikElements
+                  control="input"
+                  label="کد پستی"
+                  name="address.postalCode"
+                  onlyNumbers={true}
+                  maxLength={10}
+                  placeholder="1234567890"
+                />
               </div>
 
               {/* شماره موبایل */}
               <div className="two-cols">
-                <label className="field">
-                  <span className="label-text">شماره موبایل ۱</span>
-                  <Field name="phone[0]">
-                    {({ field, form }) => {
-                      const handleChange = (e) => {
-                        const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 11);
-                        form.setFieldValue("phone[0]", value);
-                      };
-
-                      return (
-                        <input
-                          {...field}
-                          type="text"
-                          inputMode="numeric"
-                          placeholder="09123456789"
-                          value={field.value || ""}
-                          onChange={handleChange}
-                          maxLength={11}
-                        />
-                      );
-                    }}
-                  </Field>
-                  <ErrorMessage name="phone[0]" component={CustomizeError} />
-                </label>
-
-                <label className="field">
-                  <span className="label-text">شماره موبایل ۲ (اختیاری)</span>
-                  <Field name="phone[1]">
-                    {({ field, form }) => {
-                      const handleChange = (e) => {
-                        const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 11);
-                        form.setFieldValue("phone[1]", value);
-                      };
-
-                      return (
-                        <input
-                          {...field}
-                          type="text"
-                          inputMode="numeric"
-                          placeholder="09129876543"
-                          value={field.value || ""}
-                          onChange={handleChange}
-                          maxLength={11}
-                        />
-                      );
-                    }}
-                  </Field>
-                  <ErrorMessage name="phone[1]" component={CustomizeError} />
-                </label>
+                <FormikElements
+                  control="input"
+                  label="موبایل"
+                  name="phone[0]"
+                  render={({ field, form }) => {
+                    const handleChange = (e) => {
+                      let value = e.target.value
+                        .replace(/[^0-9]/g, "")
+                        .slice(0, 11);
+                      if (value && !value.startsWith("09")) {
+                        value = "09" + value.replace(/^09+/, "");
+                      }
+                      form.setFieldValue("phone[0]", value);
+                    };
+                    return (
+                      <input
+                        {...field}
+                        onChange={handleChange}
+                        placeholder="09123456789"
+                        inputMode="numeric"
+                      />
+                    );
+                  }}
+                />
+                <FormikElements
+                  control="input"
+                  label="موبایل دوم (اختیاری)"
+                  name="phone[1]"
+                  render={({ field, form }) => {
+                    const handleChange = (e) => {
+                      let value = e.target.value
+                        .replace(/[^0-9]/g, "")
+                        .slice(0, 11);
+                      if (value && !value.startsWith("09")) {
+                        value = "09" + value.replace(/^09+/, "");
+                      }
+                      form.setFieldValue("phone[1]", value);
+                    };
+                    return (
+                      <input
+                        {...field}
+                        onChange={handleChange}
+                        placeholder="09123456789"
+                        inputMode="numeric"
+                      />
+                    );
+                  }}
+                />
               </div>
 
+              {/* تحصیلات — SelectBox */}
+              <FormikElements
+                control="select"
+                label="تحصیلات"
+                name="education"
+                options={education}
+                placeholder="یک گزینه انتخاب کنید"
+              />
+
+              {/* جنسیت — Radio */}
+              <FormikElements
+                control="radio"
+                label="جنسیت"
+                name="gender"
+                options={gender}
+              />
+
+              {/* مهارت — Checkbox */}
+              <FormikElements
+                control="checkbox"
+                label="مهارت"
+                name="skils"
+                options={skils}
+              />
+
               {/* بیوگرافی */}
-              <label className="field">
-                <span className="label-text">بیوگرافی</span>
-                <FastField as="textarea" placeholder="درباره خودت بنویس" name="bio" rows={3} />
-                <ErrorMessage name="bio" component={CustomizeError} />
-              </label>
+              <FormikElements
+                control="textarea"
+                label="بیوگرافی"
+                name="bio"
+                placeholder="راجب خودت بنویس"
+                rows="3"
+              />
 
               {/* علایق */}
               <label className="field">
+                <span className="label-text">علایق</span>
                 <FieldArray name="favorits">
-                  {(props) => <FavoritFeilds {...props} />}
+                  {(arrayHelpers) => <FavoritFeilds {...arrayHelpers} />}
                 </FieldArray>
               </label>
 
-              {/* چک‌باکس */}
-              <label className="checkbox-field">
-                <input type="checkbox" required />
-                <span>شرایط و قوانین را می‌پذیرم</span>
-              </label>
+              {/* چک‌باکس terms */}
+              {/* <FormikElements control="checkbox" name="terms"
+                options={[{id:1,value:شرت}]}
+              /> */}
 
               {/* دکمه ارسال */}
               <button
                 type="submit"
                 disabled={formik.isSubmitting || !formik.isValid}
                 className="btn"
+                style={{
+                  backgroundColor: formik.isValid ? "#3498db" : "#95a5a6",
+                  cursor: formik.isValid ? "pointer" : "not-allowed",
+                }}
               >
                 {formik.isSubmitting ? "در حال ارسال..." : "ثبت نام"}
               </button>
+
+              {/* دیباگ */}
+              <div
+                style={{ marginTop: "20px", fontSize: "12px", color: "#666" }}
+              >
+                <p>
+                  <strong>isValid:</strong>{" "}
+                  {formik.isValid ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>isSubmitting:</strong>{" "}
+                  {formik.isSubmitting ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>errors:</strong> {Object.keys(formik.errors).length}
+                </p>
+              </div>
             </Form>
           </div>
 
@@ -239,5 +325,3 @@ function App() {
     </Formik>
   );
 }
-
-export default App;
